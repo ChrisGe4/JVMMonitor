@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="info" packages="org.apache.logging.log4j.core">
+    <properties>
+        <property name="name">JVMMonitor</property>
+        <property name="pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5.5p | %C:%-5.5L | %msg%n
+        </property>
+        <!--
+        It will look like that:
+        2013-04-03 07:37:51.993 | WARN  | main       | Server Info  | My app is logging stuff
+        -->
+    </properties>
+    <appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+
+    </appenders>
+
+    <loggers>
+        <root level="${sys:log.level}">
+            <AppenderRef ref="Console" level="${sys:log.level}"/>
+        </root>
+        <logger name=" com.metrics.JVMMonitor" level="${sys:log.level}"></logger>
+    </loggers>
+
+</configuration>

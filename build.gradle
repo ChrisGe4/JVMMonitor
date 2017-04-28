@@ -1,0 +1,63 @@
+apply plugin: 'idea'
+apply plugin: "java"
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+apply from: 'gradle/test.gradle' // Inheritance -  test.gradle file
+apply from: 'gradle/dependencies.gradle'
+
+dependencies {
+    compile commonDependencies.groovy
+    compile commonDependencies.commonsLang3
+    compile commonDependencies.guice
+    compile commonDependencies.dropwizardCore
+    compile commonDependencies.dropwizardJvm
+    compile commonDependencies.statsd
+    compile commonDependencies.slf4j
+    compile commonDependencies.log4jCore
+    compile commonDependencies.log4jApi
+
+    testCompile commonDependencies.hamcrest
+    testCompile commonDependencies.junit
+    testCompile commonDependencies.mockito
+
+    runtime files('src/main/resources')
+
+
+}
+
+rootProject.version = "${majorVersion}"
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'JVM Monitor',
+                'Implementation-Version': "${majorVersion}"
+    }
+    mainClassName = 'com.metric.JVMMonitor'
+    //  baseName = projectName
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude "META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA"
+    with jar
+}
+
+artifacts {
+    println 'Building as version: ' + majorVersion
+    archives fatJar
+}
+

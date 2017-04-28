@@ -1,0 +1,41 @@
+sourceSets {
+    main
+//    test {
+//        groovy {
+//            srcDir 'src/test/unit'
+//            exclude '**/**/**/*ManualTest.*'
+//
+//        }
+//    }
+    testUnit {
+        groovy {
+            srcDir 'src/test/unit'
+            exclude '**/**/**/*ManualTest.*'
+
+        }
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+        resources.srcDir 'src/test/unit/resources'
+
+    }
+
+
+}
+
+//Unit test
+task testUnit(type: Test) {
+    systemProperty "metric.properties", 'src/test/resources/metric.properties'
+    systemProperty "log.level", "info"
+    testLogging {
+        // Show that tests are run in the command-line output
+        events 'started', 'passed'
+    }
+
+    description = "Run Unit tests (located in src/test/unit...)."
+    testClassesDir = sourceSets.testUnit.output.classesDir
+    classpath = sourceSets.testUnit.runtimeClasspath
+}
+
+testUnit.reports.html.destination = file("$buildDir/reports/test/unit")

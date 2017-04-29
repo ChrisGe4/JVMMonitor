@@ -7,7 +7,7 @@ This module is base on dropwizard jvm metrics.
 
 ## Usage
 
-Config by property file **metric.properties**
+Config by property file **-Dmetric.properties=your file** or it will look for **metric.properties** in the classpath.
 
 ```
 metric.type=classloading gc memory thread_states //default
